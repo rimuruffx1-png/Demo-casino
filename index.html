@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo Casino - Slots + Mines</title>
+  <style>
+    body { background:#0a0a0a; color:#fff; font-family:sans-serif; text-align:center; padding:20px; }
+    h1 { color: gold; }
+    .game { margin:30px auto; max-width:500px; padding:20px; background:#111; border-radius:12px; }
+    button { padding:10px 20px; font-size:16px; background:gold; color:#000; border:none; border-radius:8px; cursor:pointer; margin:5px; }
+    button:disabled { opacity:0.5; }
+    .slots { display:flex; justify-content:center; gap:10px; margin:20px; }
+    .reel { width:80px; height:80px; background:#222; border:3px solid gold; font-size:40px; display:flex; align-items:center; justify-content:center; border-radius:10px; }
+    .grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:5px; margin:20px auto; width:300px; }
+    .tile { width:55px; height:55px; background:#333; border:2px solid #555; font-size:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:6px; }
+    .tile.revealed { background:#0a0; cursor:default; }
+    .tile.mine { background:#a00; }
+    .tile.admin-preview { border:3px solid red; background:#220; }
+    #adminPanel { display:none; margin-top:10px; }
+    #adminCode { padding:8px; width:120px; text-align:center; font-size:16px; }
+    .warning { color:#ff5555; font-size:12px; margin-top:15px; }
+  </style>
+</head>
+<body>
+  <h1>🎰 Demo Casino 🎰</h1>
+  <p><b>Play Money Only - Not Real Gambling</b></p>
+  <h2>Credits: <span id="credits">1000</span></h2>
+
+  <button id="adminToggle">Admin Login</button>
+  <div id="adminPanel">
+    <input type="password" id="adminCode" placeholder="Enter Code" maxlength="6">
+    <button id="adminSubmit">Enter</button>
+    <p id="adminMsg" style="color:#ff5555;"></p>
+  </div>
+
+  <div class="game">
+    <h3>Slots - 10 Credits per spin</h3>
+    <div class="slots">
+      <div class="reel" id="r1">🍒</div>
+      <div class="reel" id="r2">🍋</div>
+      <div class="reel" id="r3">⭐</div>
+    </div>
+    <button id="spin">Spin</button>
+    <p id="slotResult"></p>
+  </div>
+
+  <div class="game">
+    <h3>Mines</h3>
+    <label>Mines:
+      <select id="mineCount">
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+      </select>
+    </label>
+    <button id="startMines">Start Game - 20 Credits</button>
+    <button id="revealBtn" style="display:none; background:red; color:white;">Reveal Mines</button>
+    <button id="cashout" disabled>Cash Out</button>
+    <div class="grid" id="mineGrid"></div>
+    <p id="mineResult"></p>
+  </div>
+
+  <p class="warning">This is a demo for educational purposes only.</p>
+
+<script>
+let credits = 1000;
+let adminMode = false;
+const ADMIN_CODE = "192012";
+let mineBoard = [];
+let gameActive = false;
+let multiplier = 1;
+const creditsEl = document.getElementById('credits');
+const adminBtn = document.getElementById('adminToggle');
+const adminPanel = document.getElementById('adminPanel');
+const revealBtn = document.getElementById('revealBtn');
+adminBtn.onclick = () => { adminPanel.style.display = adminPanel.style.display === 'block'? 'none' : 'block'; }
+document.getElementById('adminSubmit').onclick = () => {
+  const code = document.getElementById('adminCode').value;
+  if(code === ADMIN_CODE) { adminMode = true; adminBtn.innerText = "Admin: ACTIVE"; adminBtn.style.background = "lime"; revealBtn.style.display = "inline-block"; adminPanel
